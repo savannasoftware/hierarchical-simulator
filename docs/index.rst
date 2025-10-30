@@ -30,28 +30,28 @@ Welcome to the Hierarchical Data Simulator documentation! This package provides 
 .. grid:: 2
     :gutter: 3
 
-    .. grid-item-card:: 🚀 Quick Start
+    .. grid-item-card:: Quick Start
         :link: quickstart
         :link-type: doc
 
         Get up and running with the hierarchical simulator in minutes.
         Install the package and run your first simulation.
 
-    .. grid-item-card:: 📖 Installation
+    .. grid-item-card:: Installation
         :link: installation
         :link-type: doc
 
         Detailed installation instructions for pip, conda, and development setups.
         System requirements and troubleshooting.
 
-    .. grid-item-card:: 🔧 API Reference
+    .. grid-item-card:: API Reference
         :link: api/index
         :link-type: doc
 
         Complete API documentation for all simulation functions.
         Parameters, examples, and return values.
 
-    .. grid-item-card:: 🎯 Examples
+    .. grid-item-card:: Examples
         :link: examples/index
         :link-type: doc
 
@@ -61,27 +61,27 @@ Welcome to the Hierarchical Data Simulator documentation! This package provides 
 Features
 --------
 
-✨ **Four Outcome Types**
+   **Four Outcome Types**
    Generate realistic data for continuous (Gaussian), binary (Bernoulli), 
    count (Poisson/Negative-Binomial), and survival (time-to-event) outcomes.
 
-🔗 **Multiple Link Functions**
+   **Multiple Link Functions**
    Support for logistic, probit, complementary log-log, and log link functions
    with proper parameter interpretation guides.
 
-📊 **Range Constraints**
+   **Range Constraints**
    Built-in support for outcome bounds with multiple truncation methods:
    clipping, reflection, and resampling.
 
-🎲 **Reproducible Results**
+   **Reproducible Results**
    Full control over random seeds for consistent and reproducible simulations
    across research teams.
 
-📚 **Domain-Specific Defaults**
+   **Domain-Specific Defaults**
    Pre-configured parameter sets for education, healthcare, and clinical research
    based on real-world studies.
 
-⚡ **Performance Optimized**
+   **Performance Optimized**
    Efficient algorithms for large-scale simulations with thousands of groups
    and observations.
 
