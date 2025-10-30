@@ -1,0 +1,10 @@
+{
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportMissingImports": "none",
+        "reportMissingModuleSource": "none",
+        "reportImportCycles": "none"
+    },
+    "python.linting.pylintArgs": [
+        "--rcfile=tests/.pylintrc"
+    ]
+}

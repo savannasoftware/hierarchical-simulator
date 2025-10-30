@@ -1,0 +1,22 @@
+# Pylint configuration for tests
+[MAIN]
+init-hook='import sys, os; sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))'
+
+[MESSAGES CONTROL]
+# Disable warnings that are common and acceptable in tests
+disable=
+    C0103,  # Invalid name (for test variables)
+    C0114,  # Missing module docstring
+    C0115,  # Missing class docstring  
+    C0116,  # Missing function docstring
+    R0903,  # Too few public methods
+    R0913,  # Too many arguments
+    W0613,  # Unused argument
+    W0621,  # Redefined outer name (fixtures)
+    E1101,  # Instance has no member
+    E0401,  # Unable to import (common in test environments)
+    E0402,  # Attempted relative import beyond top-level package
+    F0401,  # Unable to import (duplicate of E0401 for compatibility)
+
+[FORMAT]
+max-line-length=88
