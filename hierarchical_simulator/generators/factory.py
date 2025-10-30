@@ -80,8 +80,8 @@ class GeneratorFactory:
             # Convert to dict, update, and recreate
             params_dict = default_params.__dict__.copy()
 
-            # Remove cached fields
-            for field_name in ["_n_j_cached", "_random_effect_cached", "_rng"]:
+            # Remove cached fields and non-init fields
+            for field_name in ["_n_j_cached", "_random_effect_cached", "_rng", "_lock"]:
                 if field_name in params_dict:
                     del params_dict[field_name]
 
@@ -101,7 +101,7 @@ class GeneratorFactory:
 
         Args:
             outcome_type: Outcome type to associate with the generator
-            generator: Custom generator implementation
+            : Custom generator implementation
         """
         self._registry.register(outcome_type, generator)
 
