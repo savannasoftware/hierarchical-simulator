@@ -157,8 +157,8 @@ If you use this package in your research, please cite:
 
    @software{hierarchical_simulator,
      title = {Hierarchical Data Simulator: A Python Package for Multilevel Data Generation},
-     author = {Your Name},
-     year = {2024},
+     author = {Moses Kabungo},
+     year = {2025},
      url = {https://github.com/yourusername/hierarchical-simulator},
      version = {1.0.0}
    }
