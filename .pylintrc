@@ -1,0 +1,101 @@
+[MAIN]
+# Add the project root and source directories to Python path
+init-hook='import sys, os; sys.path.insert(0, os.path.abspath(".")); sys.path.insert(0, os.path.abspath("./hierarchical_simulator"))'
+
+# Specify a configuration file.
+# rcfile=
+
+# Python code to execute, usually for sys.path manipulation such as
+# pygtk.require().
+# init-hook=
+
+# Add files or directories to the blacklist. They should be base names, not paths.
+ignore=CVS,.git,__pycache__,.pytest_cache,build,dist
+
+# Add files or directories matching the regex patterns to the blacklist.
+ignore-patterns=
+
+# Pickle collected data for later comparisons.
+persistent=yes
+
+# List of plugins (as comma separated values of python modules names) to load,
+# usually to register additional checkers.
+load-plugins=
+
+# Use multiple processes to speed up Pylint.
+jobs=1
+
+# Allow loading of arbitrary C extensions. Extensions are imported into the
+# active Python interpreter and may run arbitrary code.
+unsafe-load-any-extension=no
+
+# A comma-separated list of package or module names from where C extensions may
+# be loaded. Extensions are loading into the active Python interpreter and may
+# run arbitrary code
+extension-pkg-whitelist=
+
+[MESSAGES CONTROL]
+# Disable specific warnings that are not relevant for this scientific package
+disable=
+    C0103,  # Invalid name (for scientific variables like tau_00)
+    C0114,  # Missing module docstring
+    C0115,  # Missing class docstring
+    C0116,  # Missing function docstring
+    R0903,  # Too few public methods (for simple data classes)
+    R0913,  # Too many arguments (scientific functions often need many params)
+    W0613,  # Unused argument (common in abstract base classes)
+    E1101,  # Instance has no member (false positives with pandas)
+
+# Enable specific warnings
+enable=
+
+[REPORTS]
+# Set the output format.
+output-format=text
+
+# Tells whether to display a full report or only the messages
+reports=no
+
+# Python expression which should return a note less than 10 (10 is the highest
+# note). You have access to the variables errors warning, statement which
+# respectively contain the number of errors / warnings messages and the total
+# number of statements analyzed.
+evaluation=10.0 - ((float(5 * error + warning + refactor + convention) / statement) * 10)
+
+[SIMILARITIES]
+# Minimum lines number of a similarity.
+min-similarity-lines=4
+
+# Ignore comments when computing similarities.
+ignore-comments=yes
+
+# Ignore docstrings when computing similarities.
+ignore-docstrings=yes
+
+# Ignore imports when computing similarities.
+ignore-imports=no
+
+[VARIABLES]
+# Tells whether we should check for unused import in __init__ files.
+init-import=no
+
+# A regular expression matching the name of dummy variables (i.e. expectedly not used).
+dummy-variables-rgx=_+$|(_[a-zA-Z0-9_]*[a-zA-Z0-9]+?$)|dummy|^ignored_|^unused_
+
+[FORMAT]
+# Maximum number of characters on a single line.
+max-line-length=88
+
+# Allow the body of an if to be on the same line as the test if there is no else.
+single-line-if-stmt=no
+
+[TYPECHECK]
+# List of module names for which member attributes should not be checked
+ignored-modules=numpy,pandas,scipy,matplotlib
+
+# List of classes names for which member attributes should not be checked
+ignored-classes=
+
+# List of members which are set dynamically and missed by pylint inference
+# system, and so shouldn't trigger E1101 when accessed.
+generated-members=numpy.*,pandas.*,scipy.*

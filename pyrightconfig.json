@@ -1,0 +1,65 @@
+{
+  "include": [
+    "hierarchical_simulator",
+    "tests"
+  ],
+  "exclude": [
+    "**/__pycache__",
+    "**/.pytest_cache",
+    "**/node_modules",
+    "**/.venv",
+    "**/venv"
+  ],
+  "extraPaths": [
+    ".",
+    "./hierarchical_simulator"
+  ],
+  "pythonVersion": "3.12",
+  "pythonPlatform": "Linux",
+  "typeCheckingMode": "basic",
+  "useLibraryCodeForTypes": true,
+  "autoSearchPaths": true,
+  "autoImportCompletions": true,
+  "reportMissingImports": "warning",
+  "reportMissingTypeStubs": false,
+  "reportImportCycles": "error",
+  "reportPrivateImportUsage": "warning",
+  "reportUnusedImport": "warning",
+  "reportUnusedClass": "warning",
+  "reportUnusedFunction": "warning",
+  "reportUnusedVariable": "warning",
+  "reportDuplicateImport": "warning",
+  "reportPrivateUsage": "warning",
+  "reportConstantRedefinition": "error",
+  "reportIncompatibleMethodOverride": "error",
+  "reportInvalidStringEscapeSequence": "error",
+  "reportUnknownParameterType": "warning",
+  "reportUnknownArgumentType": "warning",
+  "reportUnknownVariableType": "warning",
+  "reportUnknownMemberType": "warning",
+  "reportMissingParameterType": "warning",
+  "reportMissingTypeArgument": "warning",
+  "reportInvalidTypeVarUse": "error",
+  "executionEnvironments": [
+    {
+      "root": ".",
+      "pythonVersion": "3.12",
+      "pythonPlatform": "Linux",
+      "extraPaths": [
+        ".",
+        "./hierarchical_simulator"
+      ]
+    },
+    {
+      "root": "./tests",
+      "pythonVersion": "3.12",
+      "pythonPlatform": "Linux",
+      "extraPaths": [
+        ".",
+        "./hierarchical_simulator"
+      ],
+      "reportMissingImports": "none",
+      "reportMissingModuleSource": "none"
+    }
+  ]
+}

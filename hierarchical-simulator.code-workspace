@@ -1,0 +1,19 @@
+{
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
+    "settings": {
+        "python.defaultInterpreterPath": "/home/moses/.pyenv/versions/jacobs-ladder/bin/python",
+        "python.terminal.activateEnvironment": true
+    },
+    "extensions": {
+        "recommendations": [
+            "ms-python.python",
+            "ms-python.pylint",
+            "ms-python.black-formatter",
+            "ms-toolsai.jupyter"
+        ]
+    }
+}
