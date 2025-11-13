@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hierarchical Data Simulator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            padding: 30px;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab:hover {
+            color: #667eea;
+        }
+        
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        input, select {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .help-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        button {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            flex: 1;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+        
+        .preview-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .preview-section.show {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+        
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .preview-header h3 {
+            color: #333;
+        }
+        
+        .download-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .download-buttons button {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .metadata {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .metadata-item {
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .metadata-item strong {
+            display: block;
+            color: #666;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+        
+        .metadata-item span {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            display: none;
+        }
+        
+        .loading.show {
+            display: block;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .error.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎲 Hierarchical Data Simulator</h1>
+            <p>Generate realistic multilevel data for research and testing</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('quick')">Quick Simulate</button>
+                <button class="tab" onclick="showTab('detailed')">Detailed Parameters</button>
+                <button class="tab" onclick="showTab('info')">Information</button>
+            </div>
+            
+            <!-- Quick Simulation Tab -->
+            <div id="quick-tab" class="tab-content active">
+                <h2>Quick Simulation</h2>
+                <p style="margin-bottom: 20px; color: #666;">Generate data quickly with sensible defaults</p>
+                
+                <form id="quick-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="quick-outcome-type">Outcome Type</label>
+                            <select id="quick-outcome-type" required>
+                                <option value="continuous">Continuous (Numeric)</option>
+                                <option value="binary">Binary (0/1)</option>
+                                <option value="count">Count (Integers)</option>
+                                <option value="survival">Survival (Time-to-event)</option>
+                            </select>
+                            <span class="help-text">Type of data to generate</span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="quick-n-groups">Number of Groups</label>
+                            <input type="number" id="quick-n-groups" value="30" min="2" max="1000" required>
+                            <span class="help-text">Number of clusters/groups</span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="quick-size-min">Group Size (Min)</label>
+                            <input type="number" id="quick-size-min" value="20" min="1" required>
+                            <span class="help-text">Minimum observations per group</span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="quick-size-max">Group Size (Max)</label>
+                            <input type="number" id="quick-size-max" value="50" min="1" required>
+                            <span class="help-text">Maximum observations per group</span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="quick-seed">Random Seed (Optional)</label>
+                            <input type="number" id="quick-seed" placeholder="Leave empty for random">
+                            <span class="help-text">For reproducible results</span>
+                        </div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button type="submit" class="btn-primary">Generate Data</button>
+                        <button type="button" class="btn-secondary" onclick="resetForm('quick')">Reset</button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Detailed Simulation Tab -->
+            <div id="detailed-tab" class="tab-content">
+                <h2>Detailed Parameters</h2>
+                <p style="margin-bottom: 20px; color: #666;">Full control over all simulation parameters</p>
+                
+                <form id="detailed-form">
+                    <h3 style="margin-bottom: 15px;">Outcome Configuration</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="outcome-type">Outcome Type</label>
+                            <select id="outcome-type" required>
+                                <option value="continuous">Continuous</option>
+                                <option value="binary">Binary</option>
+                                <option value="count">Count</option>
+                                <option value="survival">Survival</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="link-function">Link Function</label>
+                            <select id="link-function" required>
+                                <option value="identity">Identity</option>
+                                <option value="logit">Logit</option>
+                                <option value="probit">Probit</option>
+                                <option value="log">Log</option>
+                                <option value="cloglog">Complementary Log-Log</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <h3 style="margin: 30px 0 15px;">Fixed Effects</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="gamma-00">γ₀₀ (Intercept)</label>
+                            <input type="number" id="gamma-00" value="2.0" step="0.1" required>
+                            <span class="help-text">Population mean intercept</span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="gamma-10">γ₁₀ (Slope)</label>
+                            <input type="number" id="gamma-10" value="0.5" step="0.1" required>
+                            <span class="help-text">Population mean slope</span>
+                        </div>
+                    </div>
+                    
+                    <h3 style="margin: 30px 0 15px;">Random Effects</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="tau-00">τ₀₀ (Intercept SD)</label>
+                            <input type="number" id="tau-00" value="1.0" step="0.1" min="0" required>
+                            <span class="help-text">SD of group intercepts</span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="tau-11">τ₁₁ (Slope SD)</label>
+                            <input type="number" id="tau-11" value="0.3" step="0.1" min="0" required>
+                            <span class="help-text">SD of group slopes</span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="tau-01">τ₀₁ (Correlation)</label>
+                            <input type="number" id="tau-01" value="0.1" step="0.1" min="-1" max="1" required>
+                            <span class="help-text">Correlation between intercepts and slopes</span>
+                        </div>
+                    </div>
+                    
+                    <h3 style="margin: 30px 0 15px;">Additional Parameters</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="sigma">σ (Residual SD)</label>
+                            <input type="number" id="sigma" value="1.0" step="0.1" min="0">
+                            <span class="help-text">Within-group noise (continuous)</span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="dispersion">Dispersion Parameter</label>
+                            <input type="number" id="dispersion" step="0.1" min="0">
+                            <span class="help-text">For count data (optional)</span>
+                        </div>
+                    </div>
+                    
+                    <h3 style="margin: 30px 0 15px;">Simulation Structure</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="n-groups">Number of Groups</label>
+                            <input type="number" id="n-groups" value="30" min="2" max="1000" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="size-min">Group Size (Min)</label>
+                            <input type="number" id="size-min" value="20" min="1" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="size-max">Group Size (Max)</label>
+                            <input type="number" id="size-max" value="50" min="1" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="pred-min">Predictor Range (Min)</label>
+                            <input type="number" id="pred-min" value="0.0" step="0.1" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="pred-max">Predictor Range (Max)</label>
+                            <input type="number" id="pred-max" value="1.0" step="0.1" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="seed">Random Seed</label>
+                            <input type="number" id="seed" placeholder="Optional">
+                        </div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button type="submit" class="btn-primary">Generate Data</button>
+                        <button type="button" class="btn-secondary" onclick="resetForm('detailed')">Reset</button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Information Tab -->
+            <div id="info-tab" class="tab-content">
+                <h2>Information</h2>
+                
+                <div style="margin-top: 30px;">
+                    <h3>Supported Outcome Types</h3>
+                    
+                    <div style="margin-top: 20px; display: grid; gap: 20px;">
+                        <div style="padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #667eea;">
+                            <h4>📊 Continuous Data</h4>
+                            <p>Numeric outcomes with decimal values (e.g., test scores, measurements, temperatures)</p>
+                            <p><strong>Example domains:</strong> Education, Healthcare, Psychology</p>
+                        </div>
+                        
+                        <div style="padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #764ba2;">
+                            <h4>🔢 Binary Data</h4>
+                            <p>Success/failure outcomes with values 0 or 1 (e.g., pass/fail, yes/no, alive/dead)</p>
+                            <p><strong>Example domains:</strong> Medical trials, Customer conversion, Quality control</p>
+                        </div>
+                        
+                        <div style="padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #667eea;">
+                            <h4>🔢 Count Data</h4>
+                            <p>Non-negative integer counts (e.g., number of events, frequencies, occurrences)</p>
+                            <p><strong>Example domains:</strong> Epidemiology, Customer transactions, Incident reporting</p>
+                        </div>
+                        
+                        <div style="padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #764ba2;">
+                            <h4>⏱️ Survival Data</h4>
+                            <p>Time-to-event data (e.g., duration until outcome, time until failure)</p>
+                            <p><strong>Example domains:</strong> Clinical trials, Customer churn, Equipment reliability</p>
+                        </div>
+                    </div>
+                    
+                    <h3 style="margin-top: 40px;">API Endpoints</h3>
+                    <div style="margin-top: 20px;">
+                        <p><strong>API Documentation:</strong> <a href="/docs" target="_blank" style="color: #667eea;">/docs</a></p>
+                        <p><strong>Health Check:</strong> <a href="/api/v1/health" target="_blank" style="color: #667eea;">/api/v1/health</a></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Loading Indicator -->
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p>Generating data...</p>
+            </div>
+            
+            <!-- Error Message -->
+            <div id="error" class="error"></div>
+            
+            <!-- Preview Section -->
+            <div id="preview" class="preview-section">
+                <div class="preview-header">
+                    <h3>Generated Data Preview</h3>
+                    <div class="download-buttons">
+                        <button class="btn-secondary" onclick="downloadData('csv')">📥 CSV</button>
+                        <button class="btn-secondary" onclick="downloadData('json')">📥 JSON</button>
+                        <button class="btn-secondary" onclick="downloadData('excel')">📥 Excel</button>
+                    </div>
+                </div>
+                
+                <div class="metadata" id="metadata"></div>
+                
+                <div style="overflow-x: auto;">
+                    <table id="data-table">
+                        <thead id="table-head"></thead>
+                        <tbody id="table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE_URL = 'http://localhost:8000';
+        let currentData = null;
+        
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            event.target.classList.add('active');
+            
+            // Hide preview when switching tabs
+            hidePreview();
+        }
+        
+        function resetForm(formType) {
+            document.getElementById(`${formType}-form`).reset();
+            hidePreview();
+            hideError();
+        }
+        
+        function showLoading() {
+            document.getElementById('loading').classList.add('show');
+        }
+        
+        function hideLoading() {
+            document.getElementById('loading').classList.remove('show');
+        }
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.classList.add('show');
+        }
+        
+        function hideError() {
+            document.getElementById('error').classList.remove('show');
+        }
+        
+        function hidePreview() {
+            document.getElementById('preview').classList.remove('show');
+        }
+        
+        function displayPreview(data) {
+            currentData = data;
+            
+            // Show metadata
+            const metadata = data.metadata;
+            const metadataDiv = document.getElementById('metadata');
+            metadataDiv.innerHTML = `
+                <div class="metadata-item">
+                    <strong>Outcome Type</strong>
+                    <span>${metadata.outcome_type}</span>
+                </div>
+                <div class="metadata-item">
+                    <strong>Groups</strong>
+                    <span>${metadata.n_groups}</span>
+                </div>
+                <div class="metadata-item">
+                    <strong>Total Observations</strong>
+                    <span>${metadata.total_observations}</span>
+                </div>
+                <div class="metadata-item">
+                    <strong>Random Seed</strong>
+                    <span>${metadata.random_seed || 'None'}</span>
+                </div>
+            `;
+            
+            // Show table
+            const thead = document.getElementById('table-head');
+            const tbody = document.getElementById('table-body');
+            
+            // Clear existing content
+            thead.innerHTML = '';
+            tbody.innerHTML = '';
+            
+            // Create header
+            const headerRow = document.createElement('tr');
+            data.columns.forEach(col => {
+                const th = document.createElement('th');
+                th.textContent = col;
+                headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
+            
+            // Create rows
+            data.preview.forEach(row => {
+                const tr = document.createElement('tr');
+                data.columns.forEach(col => {
+                    const td = document.createElement('td');
+                    const value = row[col];
+                    td.textContent = typeof value === 'number' ? value.toFixed(4) : value;
+                    tr.appendChild(td);
+                });
+                tbody.appendChild(tr);
+            });
+            
+            // Show preview section
+            document.getElementById('preview').classList.add('show');
+        }
+        
+        async function downloadData(format) {
+            if (!currentData) return;
+            
+            showLoading();
+            hideError();
+            
+            try {
+                const params = currentData.metadata.parameters;
+                const response = await fetch(`${API_BASE_URL}/api/v1/simulate/download/${format}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(params)
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Download failed');
+                }
+                
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `hierarchical_data.${format}`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+                
+            } catch (error) {
+                showError('Download failed: ' + error.message);
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // Quick form submission
+        document.getElementById('quick-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            showLoading();
+            hideError();
+            hidePreview();
+            
+            const outcomeType = document.getElementById('quick-outcome-type').value;
+            const nGroups = parseInt(document.getElementById('quick-n-groups').value);
+            const sizeMin = parseInt(document.getElementById('quick-size-min').value);
+            const sizeMax = parseInt(document.getElementById('quick-size-max').value);
+            const seed = document.getElementById('quick-seed').value;
+            
+            const requestData = {
+                outcome_type: outcomeType,
+                n_groups: nGroups,
+                size_range: [sizeMin, sizeMax],
+                random_seed: seed ? parseInt(seed) : null
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/v1/simulate/quick`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData)
+                });
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.detail || 'Simulation failed');
+                }
+                
+                const data = await response.json();
+                displayPreview(data);
+                
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                hideLoading();
+            }
+        });
+        
+        // Detailed form submission
+        document.getElementById('detailed-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            showLoading();
+            hideError();
+            hidePreview();
+            
+            const requestData = {
+                outcome_type: document.getElementById('outcome-type').value,
+                link_function: document.getElementById('link-function').value,
+                gamma_00: parseFloat(document.getElementById('gamma-00').value),
+                gamma_10: parseFloat(document.getElementById('gamma-10').value),
+                tau_00: parseFloat(document.getElementById('tau-00').value),
+                tau_11: parseFloat(document.getElementById('tau-11').value),
+                tau_01: parseFloat(document.getElementById('tau-01').value),
+                sigma: document.getElementById('sigma').value ? parseFloat(document.getElementById('sigma').value) : null,
+                dispersion: document.getElementById('dispersion').value ? parseFloat(document.getElementById('dispersion').value) : null,
+                n_groups: parseInt(document.getElementById('n-groups').value),
+                size_range: [
+                    parseInt(document.getElementById('size-min').value),
+                    parseInt(document.getElementById('size-max').value)
+                ],
+                predictor_range: [
+                    parseFloat(document.getElementById('pred-min').value),
+                    parseFloat(document.getElementById('pred-max').value)
+                ],
+                random_seed: document.getElementById('seed').value ? parseInt(document.getElementById('seed').value) : null
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/v1/simulate/detailed`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData)
+                });
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.detail || 'Simulation failed');
+                }
+                
+                const data = await response.json();
+                displayPreview(data);
+                
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                hideLoading();
+            }
+        });
+    </script>
+</body>
+</html>

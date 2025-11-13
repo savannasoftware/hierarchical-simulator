@@ -1,0 +1,23 @@
+# FastAPI Application Requirements
+# Install with: pip install -r requirements_api.txt
+
+# Core API Framework
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+pydantic==2.5.3
+python-multipart==0.0.6
+
+# Data Export Formats
+openpyxl==3.1.2  # For Excel export
+pyarrow==15.0.0  # For Parquet export
+
+# CORS and Security
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+
+# Optional: Rate limiting and caching
+slowapi==0.1.9
+redis==5.0.1
+
+# Optional: Monitoring and logging
+prometheus-fastapi-instrumentator==6.1.0
